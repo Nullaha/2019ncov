@@ -1,11 +1,225 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <!-- Required meta tags-->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="keywords"
+        content="2019-nCoV, coronavirus, 新冠肺炎, 新型肺炎, 疫情, 可视化, 疫情小区, 查询, novel, visualization, wolrd, map, china, wuhan, heatmap, tsinghua, who">
+    <meta name="descriptions"
+        content="2019-nCoV, coronavirus, novel 新冠肺炎, 新型肺炎, 疫情, 可视化, 疫情小区, 查询, visualization, wolrd, map, china, wuhan, heatmap, tsinghua, who">
+    <!-- Bootstrap CSS-->
+    <!--link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css', integrity='sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh', crossorigin='anonymous')-->
+    <link rel="stylesheet" href="./node_modules//bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./public/css/sticky-footer-navbar.css">
+    <link rel="stylesheet" href="./public/css/all.css">
+    <!-- <link rel="icon" href="/images/logo.png"> -->
+    <script src="./node_modules/echarts/dist/echarts.min.js"></script><!-- js for map viz-->
+    <script src="./node_modules/echarts/map/js/china.js"></script>
+    <title>新型肺炎疫情可视化</title>
 </head>
+
 <body>
-    
+    <div class="container">
+        <nav id="defaultNav" class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+            <!--.container--><a href="/" class="navbar-brand"><img alt="nCov Viz" role="img" height="40"
+                    src="./images/icon.png" class="d-block"></a><button type="button" data-toggle="collapse"
+                data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false"
+                aria-label="Toggle navigation" class="navbar-toggler"><span class="navbar-toggler-icon"></span></button>
+            <div id="navbarCollapse" class="collapse navbar-collapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active"><a href="#" class="nav-link">可视化分析<span
+                                class="sr-only">(current)</span></a></li>
+                    <li class="nav-item"><a href="./community" class="nav-link">疫情小区查询</a></li>
+                    <li class="nav-item"><a href="https://mp.weixin.qq.com/s/5K68oM9_QAyWHOvTrrogrg"
+                            class="nav-link">疫情分析报告</a></li>
+                    <li class="nav-item"><a href="#" data-toggle="modal" data-target="#exampleModal"
+                            class="nav-link">联系我们</a></li>
+                </ul>
+                <form class="mt-2 mt-md-0"><small style="color:white; margin-right: 20px;">访问人次：98622</small></form>
+                <form class="mt-2 mt-md-0"><a href="/" class="button btn btn-sm btn-dark">中文</a><a
+                        style="margin-right: 20px" href="/en" class="button btn btn-sm btn-dark">English</a></form>
+            </div>
+        </nav>
+        <nav id="myNav" style="display:none" class="navbar-expand-md fixed-top bg-dark">
+            <div class="row">
+                <div style="margin-top:10px; margin-bottom:10px" class="col-4 text-center"><a href="#"
+                        class="text-primary"><i class="fas fa-chart-line">&nbsp; 可视化分析</i><span
+                            class="sr-only">(current)</span></a></div>
+                <div style="margin-top:10px; margin-bottom:10px" class="nav-item col-4 text-center"><a
+                        href="./community" class="text-muted"><i class="fas fa-home">&nbsp; 疫情小区查询</i></a></div>
+                <div style="margin-top:10px; margin-bottom:10px" class="nav-item col-4 text-center"><a
+                        href="https://mp.weixin.qq.com/s/c61V-u2LufBe_r0i73Durw" class="text-muted"><i
+                            class="fas fa-print">&nbsp;疫情分析报告</i></a></div>
+            </div>
+        </nav>
+    </div>
+    <Modal id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+        class="modal fade">
+        <div role="document" class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="exampleModalLabel" class="modal-title">About us</h5><button type="button"
+                        data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th>People</th>
+                                <th>Contact</th>
+                                <th>Role</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Prof. Guoliang Li</td>
+                                <td>
+                                    <p><a href="http://dbgroup.cs.tsinghua.edu.cn/ligl/index.html">Homepage</a></p>
+                                </td>
+                                <td>Design & Directing</td>
+                            </tr>
+                            <tr>
+                                <td>Dr. Nan Tang</td>
+                                <td>
+                                    <p><a href="http://da.qcri.org/ntang/">Homepage</a></p>
+                                </td>
+                                <td>Design & Directing</td>
+                            </tr>
+                            <tr>
+                                <td>Yuyu Luo</td>
+                                <td>
+                                    <p><a href="https://luoyuyu.vip">Homepage</a></p>
+                                </td>
+                                <td>Visualization & Developing</td>
+                            </tr>
+                            <tr>
+                                <td>Tianyu Zhao</td>
+                                <td>
+                                    <p><a
+                                            href="https://scholar.google.com/citations?user=4oDlQ-UAAAAJ&amp;hl=en">Homepage</a>
+                                    </p>
+                                </td>
+                                <td>Developing</td>
+                            </tr>
+                            <tr>
+                                <td>Wenbo Li</td>
+                                <td>
+                                    <p><a href="li-wb17@mails.tsinghua.edu.cn">Email</a></p>
+                                </td>
+                                <td>Crawling data</td>
+                            </tr>
+                            <tr>
+                                <td>Xiang Yu</td>
+                                <td>
+                                    <p></p>
+                                </td>
+                                <td>Prediction Module</td>
+                            </tr>
+                        </tbody>
+                    </table><br>
+                    <h6>Acknowledgement</h6>
+                    <p>We thank Isaac Lin for providing data &nbsp;<a
+                            href="https://github.com/BlankerL/DXY-COVID-19-Crawler/blob/master/README.en.md">API .</a>
+                    </p>
+                </div>
+                <div class="modal-footer"><button type="button" data-dismiss="modal"
+                        class="btn btn-secondary">Close</button></div>
+            </div>
+        </div>
+    </Modal>
+    <main role="main" style="margin-top:15px; margin-left:3%; margin-right:2%" class="container">
+        <div class="row">
+            <div id="firstBlock" class="col-md-7 col-sm-12 col-12">
+                <table id="overallTable" style="text-align: center; width: 650px;" class="table">
+                    <thead>
+                        <tr><small id="last_update" class="text-muted"></small>
+                            <th><small><span id="confirmedIncr" class="text-muted"></span></small><br><big
+                                    id="confirmedCount" class="text-danger">暂缺
+                                    24447</big>
+                                <p>累计确诊</p>
+                            </th>
+                            <th><small><span id="suspectedIncr" class="text-muted"></span></small><br><big
+                                    id="suspectedCount" class="text-warning"> 暂缺</big>
+                                <p>现存疑似</p>
+                            </th>
+                            <th><small><span id="seriousIncr" class="text-muted"></span></small><br><big
+                                    id="seriousCount" class="text-info"> 暂缺</big>
+                                <p>现存重症</p>
+                            </th>
+                            <th><small><span id="deadIncr" class="text-muted"></span></small><br><big id="deadCount"
+                                    class="text-primary"> 暂缺</big>
+                                <p>死亡</p>
+                            </th>
+                            <th><small><span id="curedIncr" class="text-muted"></span></small><br><big id="curedCount"
+                                    class="text-success"> 暂缺</big>
+                                <p>治愈</p>
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+                <div style="width: 650px;" class="btn-group btn-group-sm d-flex"><button id="btn-province-map"
+                        level="province_level" class="btn btn-outline-primary btn-maps"><i
+                            class="fas fa-map-marked-alt">&nbsp; 疫情地图（中国省级）</i></button><button id="btn-city-map"
+                        level="district_level" class="btn btn-outline-secondary btn-maps"><i
+                            class="fas fa-map-marker-alt">&nbsp; 疫情地图（中国县市级）</i></button><button id="btn-world-map"
+                        level="world_level" class="btn btn-outline-secondary btn-maps"><i
+                            class="fas fa-globe-asia">&nbsp; 疫情地图（世界地图）</i></button></div>
+                <div id="map" style="width: 720px; height:500px;"></div><br>
+                <div class="row">
+                    <div id="pieBlock" class="col-md-5 col-sm-5 col-5">
+                        <div id="pie" style="width: 350px; height: 300px;" class="china-vis"></div>
+                    </div>
+                    <div class="col-md-5 col-sm-5 col-5 offset-2">
+                        <div id="pie_gender" style="width: 350px; height: 300px;" class="china-vis"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-7 col-sm-12 col-12">
+                        <div id="bar_age" style="width: 720px; height:250px;" class="china-vis"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-7 col-sm-12 col-12">
+                        <div id="cal_pie" style="width: 720px; height:600px;" class="china-vis"></div>
+                    </div>
+                </div>
+            </div>
+            <div id="secondBlock" class="col-md-5 col-sm-12">
+                <div class="col-md-12">
+                    <div id="line_bar" style="width: 720px; height:250px;" class="china-vis"></div>
+                    <div id="bar" style="width: 720px; height: 270px;" class="china-vis"></div>
+                    <div id="bar_die_cure_ratio" style="width: 720px; height: 500px;" class="china-vis"></div>
+                    <div id="bar_ratio" style="width: 720px; height: 270px;" class="china-vis"></div>
+                    <div id="bar_density" style="width: 720px; height: 270px;" class="china-vis"></div>
+                    <div id="bar_cities" style="width: 720px; height: 270px;" class="china-vis"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="footer">
+        <div class="container"><span class="text-muted">&copy; 2020 &nbsp<a
+                    href="http://dbgroup.cs.tsinghua.edu.cn/ligl/index.html">Database Group, Tsinghua University &nbsp
+                    &middot &nbsp</a></span><span class="text-muted"><a href="http://da.qcri.org/ntang/">QCRI,
+                    HBKU</a></span></div>
+    </footer><!-- Optional JavaScript-->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS-->
+    <!-- script(src='https://code.jquery.com/jquery-3.1.1.min.js') -->
+    <!-- script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js', integrity='sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6', crossorigin='anonymous') -->
+    <!-- <script src="./bootstrap/jquery.min.js"></script> -->
+    <!-- <script src="./bootstrap/bootstrap.min.js"></script> -->
+    <script src="./data/metadata.js"></script><!-- my js for viz-->
+    <!-- <script src="./viz/custom.js"></script> -->
+    <script src="./viz/map.js"></script>
+    <!-- <script src="./viz/bar.js"></script> -->
+    <!-- <script src="./viz/pie.js"></script> -->
+
+    <!-- <script src="./viz/line_bar.js"></script> -->
+    <script src="./viz/calendar_pie.js"></script>
+
+    <script>// 更新总结的表格
+        update_overall_table();</script>
 </body>
+
 </html>

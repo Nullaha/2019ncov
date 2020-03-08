@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>nCov-全国分布图</title>
+  <!--1. 引入echarts -->
+  <script src="./node_modules/echarts/dist/echarts.min.js"></script>
+  <script src="./node_modules/echarts/map/js/china.js"></script>
+</head>
+
+<body>
+  <!-- 2. 定义div容器 -->
+  <div id="container" style="width: 600px;height: 600px;"></div>
+  <!-- 3.将图表配置到容器中 -->
+  <script>
+    // 将echarts和div关联
+    var myChart = echarts.init(document.querySelector('#container'))
+    fetch('http://127.0.0.1:8080/api/data')
+      .then(res => res.json()) //把可读数据流转换为json格式
+      .then(res => {
+        console.log(res);//读取到疫情数据
+        var getListByCountryTypeService1 = res.getListByCountryTypeService1
+        var filterData = []
+        getListByCountryTypeService1.forEach(item => {
+          filterData.push({
+            name: item.provinceShortName,
+            value: item.confirmeCount,
+            deadCount: item.deadCount,
+            curedCount: item.curedCount
+          })
+        });
+        console.log(filterData);//[{name:'湖北',value:,deadCount:,curedCount:}...]
+
+        myChart.setOption({
+          title: {
+            text: 'nCov-全国分布图',
+            subtext: 'Nullaha',
+            left: 'center',
+          },
+          backgroundColor: '#f7f7f7',
+          tooltip:{ //提示框内容
+            formatter:function(params){
+              return `地区:${params.name}<br/>确诊:${params.value || 0}<br/>治愈:${params.data && params.data.curedCount || 0}<br/>死亡:${params.data ?. params.data.deadCount || 0}`
+            }
+          },
+          series: [
+            {
+              type: 'map', // 当前图表类型
+              map: 'china',
+              label: {//覆盖物设置
+                show: true,
+              },
+              data:filterData,
+            }
+          ]
+        })
+      })
+
+  </script>
+</body>
+
+</html>
